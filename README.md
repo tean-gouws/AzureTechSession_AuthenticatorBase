@@ -1,12 +1,16 @@
-# Project Title
+# Top Secret
 
-One Paragraph of project description goes here
+If you are reading this document, you have been chosen to be part of an elite team of software developers. Today the FBI needs your help on a top-secret mission. 
 
-## Getting Started
+## Your Mission
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Over the past few weeks there has been several attempts at gaining unauthorized access to our systems by attempts to crack, snoop and extort account information from our agents. 
 
-### Prerequisites
+We need you to create an alternative means of authentication on our portals. Usernames and Password does not cut it anymore, we need something much more unique. Your mission is to create an identity provider that make use of a combination of facial and voice recognition to ensure that access to our system is secure. The solution needs to be implemented using Microsoft Azure Serverless Technologies.
+
+## Mission Overview
+
+### Objective 1: Agent Registration and Face Training Logic App with CosmosDB
 
 What things you need to install the software and how to install them
 
