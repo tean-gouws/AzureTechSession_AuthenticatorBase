@@ -1,3 +1,4 @@
+
 # Top Secret
 
 If you are reading this document, you have been chosen to be part of an elite team of software developers. Today the FBI needs your help on a top-secret mission. 
@@ -12,7 +13,28 @@ We need you to create an alternative means of authentication on our portals. Use
 
 ### Objective 1: Agent Registration and Face Training Logic App with CosmosDB
 
-What things you need to install the software and how to install them
+A static registration web page has already been created. This page will allow an agent to capture his/her information and then take several photos and voice recordings to train the recognition system. For your first objective you must create the required cloud services to register agents and capture their faces on Azure Cognitive Services. As time is of the essence, the best course of action will be to make use of Microsoft Azure Logic Apps.
+
+
+ #### 1.	Clone the Web Project and install on local IIS 
+ #### 2.	Log into the Azure Portal 
+ #### 3.	Create a new Resource Group
+ - Click on ***Create a Resource*** at the top right corner of the screen 
+ - Search for and Select Resource Group from the list
+
+![alt text](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Wikipedia_article-creation-2.svg/260px-Wikipedia_article-creation-2.svg.png)
+ - Click Create
+	- Enter a resource Group Name e.g. ***FBIAuthResourceGroup***
+	- Select the Subscription to use
+	- Set the Location to ***West Europe***
+	- Click Create
+- Open the Notifications menu and select ***Pin to Dashboard*** on the newly created resource
+ #### 4.	Add a Storage Account to the resource group
+ 
+ #### 5.	Clone the Web Project and install on local IIS 
+ #### 6.	Clone the Web Project and install on local IIS 
+ #### 7.	Clone the Web Project and install on local IIS 
+ 
 
 ```
 Give examples
