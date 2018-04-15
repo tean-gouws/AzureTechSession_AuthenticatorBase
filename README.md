@@ -1,4 +1,5 @@
 
+
 # Top Secret
 
 If you are reading this document, you have been chosen to be part of an elite team of software developers. Today the FBI needs your help on a top-secret mission. 
@@ -117,20 +118,25 @@ A static registration web page has already been created. This page will allow an
 ```
 	https://westeurope.API.cognitive.microsoft.com/face/v1.0.
 ```
-- Navigate to: 
-```
-	https://westeurope.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f30395244 
-```
-- Open the Person Group Accordion on the left of the page and select PUT (Create) menu item.
+- Navigate to [Cognitive Services Face API Reference](	https://westeurope.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f30395244 )
+
+- Open the Person Group Accordion on the left of the page and select ***PUT (Create)*** menu item.
 - Under ***Open API testing console*** click on ***West Europe***
 - Enter a ***PersonGroupId*** eg. ***fbipersongroup*** and paste the copied face API key into the ***Ocp-APIm-Subscription-Key*** Textbox
 - Change the ***name*** value in the Request body text area to the ***PersonGroupId***, scroll down and click ***Send***
-- Navigate back to the lLogic App and paste the previously copied values into the ***API Key*** and ***Site URL*** textboxes
+- Navigate back to the Logic App and paste the previously copied values into the ***API Key*** and ***Site URL*** Textboxes
 - Click Create
 - Select the newly created person group id from the ***Person Group Id*** Dropdown
 - Click on the ***Blob Name***, select the ***Expression*** tab on the popup and type ***guid()*** and click OK
 
- #### 11.	Create the Trigger and run the Logic App to get the Request body template
+ #### 11.	Train the Face API with the first Face
+ -	Hover around the bottom of the ***Create a Person*** connector and click on the ***+*** icon, Select ***Add an Action***, search for ***Face API*** and select ***Face API – Add a Person Face***
+•	Select the previously created ***Person Group ID*** from the ***Person Group ID*** Dropdown.
+•	On the other tab, re-open the storage account overview screen and then open the blob service panel. Copy the Blob service endpoint value at the top of the page.
+•	Paste the endpoint address into the ***Image URL*** on the Logic App. NB Remove the last ***"\\"*** from the URL string.  While the focus is on the URL Textbox, select the ***Path*** option under the ***Create Blob*** section on the popup. 
+•	Save the Logic app and open the ***Register.html*** web page to test the functionality thus far.
+•	Inspect the execution details of the last run Logic App to confirm that everything succeeded.  
+
  #### 12.	Create the Trigger and run the Logic App to get the Request body template
  #### 13.	Create the Trigger and run the Logic App to get the Request body template
  #### 14.	Create the Trigger and run the Logic App to get the Request body template
