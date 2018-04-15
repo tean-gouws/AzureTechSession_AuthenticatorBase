@@ -283,8 +283,16 @@ namespace FBIAuthFucntions
     public String id { get; set; }
   }
 }
-
 ```
+#### 21.	Test the Function
+- Run the Function App
+- Copy the URL from the console window and open the ***app.js*** file on your local machine and replace ***FUNCTION APP URL*** with the copied value.
+- Open the ***Login.html*** page. Pressing and holding the key button will open a video capture screen and releasing it will post the photo to the newly created function. Debug the application to test if it works.   
+
+#### 22.	Publish the Function
+- Run the function app with a breakpoint to step through the code
+- Copy the URL from the console window and open the app.js file on your local machine and replace FUNCTION APP URL with the copied value.
+- Open the Login page, Holding the Key button will open a Video Capture Screen and releasing it will post the photo to the function. Debug the application to see if it works.   
 
 ### Installing
 
