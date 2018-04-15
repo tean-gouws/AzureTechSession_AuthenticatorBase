@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="src/recorder.js"></script>
+    <script src="src/Fr.voice.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/register.js"></script>
+</head>
+<body style="background-image:url('fbibg.png'); background-repeat: no-repeat; background-position-x:right;  background-size:800px; background-color: black">
+    <div style="margin-top: 50px; margin-left:80px;font-family:Arial, Helvetica, sans-serif; color:white !important ">
+        
+        <h2>Personal Information</h2>
+        <form id="agentdetails">
+            <input type="hidden" id="userid"/>
+            First Name: &nbsp;&nbsp;<input id="firstname" name="firstname" style="background-color:transparent; color:white"/><br/><br/>
+            Surname: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="surname" name="surname" style="background-color:transparent; color:white" /> <br/><br/>
+            Code Name:  <input id="codename" name="codename" style="background-color:transparent; color:white"/> <br/><br/>
+            Department: <input id="department" name="department" style="background-color:transparent; color:white"/> <br/><br/>
+            Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input id="email" name="email" style="background-color:transparent; color:white"/> <br/><br/>
+        </form>
+        
+        <h2>Face Registration</h2>
+        <video id="screenshot-video" autoplay=""  style="width: 300px;height: 300px; margin-top: -37px; " ></video>
+        <img id="capture1" style="border:solid white 0.1px; width:300px; height:225px; vertical-align: top; margin-left: 10px"/> 
+        <img id="capture2" style="border:solid white 0.1px; width:300px; height:225px; vertical-align: top; margin-left: 10px"/> 
+        <img id="capture3" style="border:solid white 0.1px; width:300px; height:225px; vertical-align: top; margin-left: 10px"/>  
+        <br/>
+        <button id="capturePhoto" style="clear:both; color: white; background-color: transparent">Capture</button>
+
+        <h2>Voice Registration</h2>
+        
+       
+        <img src="red.png" style="width:50px;">  <img src="red.png" style="width:50px; margin-left:20px"> <img src="red.png" style="width:50px; margin-left:20px"> 
+        <br/><br/>
+        I need to get this phrase from somewere and it needs to change as I record it every time. I really hope this works.
+        <br/><br/>
+        <img src="unclicked.png" style="width:50px">
+    
+       
+    </div>    
+    
+    <input type="hidden" id="userid"/>
+</html>

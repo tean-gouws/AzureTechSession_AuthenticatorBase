@@ -167,7 +167,7 @@ A Second Logic App will allow registered Agents to upload more photos and to tra
 
 #### 13.	Add another HTTP Triggered Logic App with to the Resource Group called     FBIFaceTraining
 #### 14.	Copy the Request Body JSON Schema from the first Logic app to the second and replace “x-ms-meta-userdata” with “x-ms-meta-userid” and save the app.
-#### 15.	Copy the url and paste it onto the web app – register.js line 64 
+#### 15.	Copy the url and paste it onto the web app – register.js line 67 
 #### 16.	Once again create a blob connector and remember to use guid().png and base64ToBinary(triggerBody()['$content']) for the values.
 #### 17.	Add Face API – Add a person face connector but this time, for the person ID, Add the expression:  triggerOutputs()['headers']['x-ms-meta-userid’]. Remember the imageurl is the storage account endpoint address. This can be copied from the other Logic app.
 #### 18.	Finally add a request - response connector that returns the persisted face id in the response body.
@@ -289,10 +289,12 @@ namespace FBIAuthFucntions
 - Copy the URL from the console window and open the ***app.js*** file on your local machine and replace ***FUNCTION APP URL*** with the copied value.
 - Open the ***Login.html*** page. Pressing and holding the key button will open a video capture screen and releasing it will post the photo to the newly created function. Debug the application to test if it works.   
 
+
 #### 22.	Publish the Function
 - Run the function app with a breakpoint to step through the code
 - Copy the URL from the console window and open the app.js file on your local machine and replace FUNCTION APP URL with the copied value.
 - Open the Login page, Holding the Key button will open a Video Capture Screen and releasing it will post the photo to the function. Debug the application to see if it works.   
+
 
 ### Installing
 
