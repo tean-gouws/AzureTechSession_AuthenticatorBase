@@ -131,19 +131,159 @@ A static registration web page has already been created. This page will allow an
 
  #### 11.	Train the Face API with the first Face
  -	Hover around the bottom of the ***Create a Person*** connector and click on the ***+*** icon, Select ***Add an Action***, search for ***Face API*** and select ***Face API – Add a Person Face***
-•	Select the previously created ***Person Group ID*** from the ***Person Group ID*** Dropdown.
-•	On the other tab, re-open the storage account overview screen and then open the blob service panel. Copy the Blob service endpoint value at the top of the page.
-•	Paste the endpoint address into the ***Image URL*** on the Logic App. NB Remove the last ***"\\"*** from the URL string.  While the focus is on the URL Textbox, select the ***Path*** option under the ***Create Blob*** section on the popup. 
-•	Save the Logic app and open the ***Register.html*** web page to test the functionality thus far.
-•	Inspect the execution details of the last run Logic App to confirm that everything succeeded.  
+-	Select the previously created ***Person Group ID*** from the ***Person Group ID*** Dropdown.
+-	On the other tab, re-open the storage account overview screen and then open the blob service panel. Copy the Blob service endpoint value at the top of the page.
+-	Paste the endpoint address into the ***Image URL*** on the Logic App. NB Remove the last ***"\\"*** from the URL string.  While the focus is on the URL Textbox, select the ***Path*** option under the ***Create Blob*** section on the popup. 
+-	Save the Logic app and open the ***Register.html*** web page to test the functionality thus far.
+-	Inspect the execution details of the last run Logic App to confirm that everything succeeded.  
 
- #### 12.	Create the Trigger and run the Logic App to get the Request body template
- #### 13.	Create the Trigger and run the Logic App to get the Request body template
- #### 14.	Create the Trigger and run the Logic App to get the Request body template
- #### 15.	Create the Trigger and run the Logic App to get the Request body template
- #### 16.	Create the Trigger and run the Logic App to get the Request body template
+ #### 12.	Upload Details to Cosmos DB
+ - On the Logic App designer, Click on the ***+ New Step*** link at the bottom of the page and search for ***Compose***. Select ***Data Operations – Compose***
+- Rename the connector to ***Compose Document*** by using the ellipses at the top-right corner. Paste the following text into the input field:
 ```
-Give examples
+{
+  "id": "",
+  "fullname": "",
+  "codename": "",
+  "department": "",
+  "email": ""
+}
+```
+- Find and place the variable blocks in the right positions based on the image below:
+![alt text](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Wikipedia_article-creation-2.svg/260px-Wikipedia_article-creation-2.svg.png)
+- On the other tab, navigate back to the portal dashboard and add another resource to the resource group. Search for ***Cosmos***, select ***Azure Cosmos DB*** and click ***Create*** 
+- Enter a name for the account. This must be globally unique. Select ***MongoDB*** as the API and make sure the correct Subscription, Resource Group and Location has been selected. Deselect ***Geo-redundancy*** as we will not require it for this exercise, click ***Create***
+- Navigate to the created Cosmos DB Resource overview page through the resource group and click on ***+ Add Collection***
+- Enter a database name, e.g. ***fbiagentdetails*** and keep the ***Create New*** radio button ticked. For the collection ID, enter a collection name. e.g. ***mainagentcollection***
+- Select ***Fixed 10GB*** for size and ***400*** for estimated usage, click ***Create***
+- Navigate back to the logic app tab and click on ***+ New step*** at the bottom of the page. Select ***Add new Action*** and Search for Cosmos and select ***Cosmos DB – Create or Update a document***
+- Enter a connection name and select the previously created Cosmos DB database, click ***Create***
+- Select the Database ID, Collection ID and for the Document field, select the output variable from the ***Compose Document*** section on the popup.
+- Leave the partition key empty ans select ***Yes*** for ***IsUpsert***. Save and test the web application.
+
+### Objective 2: Create a Logic App for further face training
+
+A Second Logic App will allow registered Agents to upload more photos and to train the Cognitive Services Face API to better recognize them in the future.   
+
+#### 13.	Add another HTTP Triggered Logic App with to the Resource Group called     FBIFaceTraining
+#### 14.	Copy the Request Body JSON Schema from the first Logic app to the second and replace “x-ms-meta-userdata” with “x-ms-meta-userid” and save the app.
+#### 15.	Copy the url and paste it onto the web app – register.js line 64 
+#### 16.	Once again create a blob connector and remember to use guid().png and base64ToBinary(triggerBody()['$content']) for the values.
+#### 17.	Add Face API – Add a person face connector but this time, for the person ID, Add the expression:  triggerOutputs()['headers']['x-ms-meta-userid’]. Remember the imageurl is the storage account endpoint address. This can be copied from the other Logic app.
+#### 18.	Finally add a request - response connector that returns the persisted face id in the response body.
+#### 19.	Save the Function and test the application by pressing the capture button again. You should now be able to successfully Register agents and train the system with their faces.
+
+### Objective 3: Create an Azure Function App for Facial Recognition
+
+The facial recognition part will have to be done using Azure Functions as there are currently no Logic App connectors for Person Identification.
+
+#### 20.	Create an HTTP triggered function app in Visual Studio
+- Open Visual Studio 2017 and Create a new ***VisualC# -> Cloud -> Azure Function App*** called ***FBIAuthFunctions***
+- Select ***Empty*** and under Storage Account Select ***None***
+- On the Solution Explorer, right-click on the Project and select ***Add -> New Item***
+- Select ***Azure Function*** and Name it ***IdentifyPerson.cs***
+- On the NuGet package manager console type: 
+  - Install-Package ***Microsoft.ProjectOxford.Face***
+  - Install-Package ***Microsoft.Azure.DocumentDB***
+- Open the ***local.settings.json*** file and replace the content with the following text:
+```
+{
+  "IsEncrypted": false,
+  "Values":{
+    "AzureWebJobsStorage": "",
+    "AzureWebJobsDashboard": "",
+    "FaceApiKey": "dda76b22f5824fdfa279df7259241f3a",
+    "FaceApiUrl": "https://westeurope.api.cognitive.microsoft.com/face/v1.0",
+    "FaceApiPersonGroupName": "fbipersongroup",
+    "CosmosDBEndpointUrl": "https://fbiauthdb.documents.azure.com:443/",
+    "CosmosDBKey": "wzoaouBUYszb6aokPbiDYdPURXpm5lHtdIFV==",
+    "CosmosDBDatabaseName": "fbiauthdb",
+    "CosmosDBCollectionName": "agentdetail"
+  },
+  "Host":{
+    "CORS": "*"
+  }
+}
+```
+- Enter the correct values for the ***FaceApiKey, FaceApiUrl**, etc. to the ***CosmosDBCollectionName***, these values was used in the Logic Apps and can also be found on the resources themselves. 
+- Open ***IdentifyPerson.cs*** and copy the following code into it:
+```
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
+using Microsoft.ProjectOxford.Face;
+
+namespace FBIAuthFucntions
+{
+  public static class IdentifyPerson
+  {
+
+    private static FaceServiceClient client = new FaceServiceClient(Environment.GetEnvironmentVariable("FaceApiKey", EnvironmentVariableTarget.Process), Environment.GetEnvironmentVariable("FaceApiUrl", EnvironmentVariableTarget.Process));
+    private static string PersonGroup = Environment.GetEnvironmentVariable("FaceApiPersonGroupName", EnvironmentVariableTarget.Process);
+
+    private static DocumentClient DocClient;
+    private static string EndpointUrl = Environment.GetEnvironmentVariable("CosmosDBEndpointUrl", EnvironmentVariableTarget.Process);
+    private static string PrimaryKey = Environment.GetEnvironmentVariable("CosmosDBKey", EnvironmentVariableTarget.Process);
+    private static string DatabaseName = Environment.GetEnvironmentVariable("CosmosDBDatabaseName", EnvironmentVariableTarget.Process);
+    private static string CollectionName = Environment.GetEnvironmentVariable("CosmosDBCollectionName", EnvironmentVariableTarget.Process);
+
+
+    [FunctionName("IdentifyPerson")]
+    public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+    {
+      log.Info("C# HTTP trigger function processed a request.");
+
+      try
+      {
+        await client.TrainPersonGroupAsync(PersonGroup);
+      }
+      catch (Exception e)
+      {
+      }      DocClient = new DocumentClient(new Uri(EndpointUrl), PrimaryKey);
+
+      using (var stream = new MemoryStream(await req.Content.ReadAsByteArrayAsync()))
+      {
+        var detected = await client.DetectAsync(stream);
+        var identified = await client.IdentifyAsync(detected.Select(x => x.FaceId).ToArray(), PersonGroup);
+
+        var personId = identified.OrderByDescending(x =>
+            x.Candidates.OrderByDescending(y => y.Confidence).FirstOrDefault()?.Confidence ?? 0).FirstOrDefault()?
+          .Candidates.OrderByDescending(y => y.Confidence).FirstOrDefault()?.PersonId;
+
+        if (personId != null)
+        {
+          var personIdString = personId.ToString();
+          var document = DocClient.CreateDocumentQuery<Document>(UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName))
+            .Where(d => d.Id == personIdString).AsEnumerable().FirstOrDefault();
+
+          if (document != null)
+          {
+            return req.CreateResponse(HttpStatusCode.OK, document.ToString());
+          }
+        }
+      }
+      return req.CreateResponse(HttpStatusCode.NotFound, "Agent not found");
+    }
+  }
+
+  public class Agent
+  {
+    public String codename { get; set; }
+    public String department { get; set; }
+    public String email { get; set; }
+    public String fullname { get; set; }
+    public String id { get; set; }
+  }
+}
+
 ```
 
 ### Installing
